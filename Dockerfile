@@ -50,7 +50,7 @@ RUN > /var/lib/pgsql/9.2/data/pg_hba.conf
 
 RUN echo "local   all             postgres                                trust" >> /var/lib/pgsql/9.2/data/pg_hba.conf
 
-RUN service postgresql-9.2 start && sleep 2 && psql -U postgres --command "ALTER USER postgres with encrypted password 'P0stgres';" && createdb -U postgres tourreserve;
+RUN service postgresql-9.2 start && sleep 2 && psql -U postgres --command "ALTER USER postgres with encrypted password 'P0stgres';" && createdb -U postgres tourreserve; service postgresql-9.2 stop
 
 # edit pgsql conf files
 RUN echo "listen_addresses='*'" >> /var/lib/pgsql/9.2/data/postgresql.conf
@@ -69,7 +69,7 @@ WORKDIR /home/terasoluna-tourreservation/terasoluna-tourreservation-initdb/
 ENV JAVA_HOME /usr/lib/jvm/java-1.6.0
 
 # create database
-RUN service postgresql-9.2 start && mvn sql:execute
+RUN service postgresql-9.2 start && mvn sql:execute && service postgresql-9.2 stop
 
 WORKDIR /home/terasoluna-tourreservation/
 
