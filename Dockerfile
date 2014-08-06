@@ -7,7 +7,7 @@ RUN yum update -y
 RUN yum install -y java-1.7.0-openjdk
 
 # install git, curl, tar, wget
-RUN yum install -y curl wget git tar
+RUN yum install -y curl wget git tar which
 
 # change workdir
 WORKDIR /home/
@@ -16,8 +16,6 @@ WORKDIR /home/
 RUN wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
 
 RUN yum install -y apache-maven
-
-#RUN ln -s /usr/share/apache-maven/bin/mvn /usr/bin/mvn
 
 # install tomcat7
 RUN wget http://apache.mirrors.lucidnetworks.net/tomcat/tomcat-7/v7.0.55/bin/apache-tomcat-7.0.55.tar.gz
@@ -31,9 +29,9 @@ RUN wget http://yum.pgrpms.org/9.2/redhat/rhel-6-x86_64/pgdg-centos92-9.2-6.noar
 
 RUN rpm -ivh pgdg-centos92-9.2-6.noarch.rpm
 
-RUN yum install -y postgresql92 postgresql92-server postgresql92-contrib
+RUN yum install -y postgresql92 postgresql92-server postgresql92-contrib && sleep 1
 
-RUN sleep 1 && service postgresql-9.2 initdb && sleep 1
+RUN service postgresql-9.2 initdb && sleep 1
 
 RUN service postgresql-9.2 start && netstat -alntp && service postgresql-9.2 stop
 
