@@ -80,6 +80,11 @@ RUN mvn -f terasoluna-tourreservation-web/pom.xml package -Dmaven.test.skip=true
 # copy war file to tomcat
 RUN cp terasoluna-tourreservation-web/target/terasoluna-tourreservation-web.war /usr/local/tomcat7/webapps/
 
+# change permission of /tmp/ directory because pgsql is using it for storing lock files
+WORKDIR /
+
+RUN chmod 777 /tmp/
+
 # expose 8080 port
 EXPOSE 8080
 
