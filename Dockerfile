@@ -33,7 +33,7 @@ RUN rpm -ivh pgdg-centos92-9.2-6.noarch.rpm
 
 RUN yum install -y postgresql92 postgresql92-server postgresql92-contrib
 
-RUN sleep 2 && service postgresql-9.2 initdb && sleep 2
+RUN sleep 1 && service postgresql-9.2 initdb && sleep 1
 
 RUN service postgresql-9.2 start && netstat -alntp && service postgresql-9.2 stop
 
