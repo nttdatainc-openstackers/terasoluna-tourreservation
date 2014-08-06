@@ -9,6 +9,9 @@ RUN yum install -y java-1.7.0-openjdk
 # install git, curl, tar, wget
 RUN yum install -y curl wget git tar
 
+# change workdir
+WORKDIR /home/
+
 #install maven
 RUN wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
 
@@ -30,27 +33,19 @@ RUN rpm -ivh pgdg-centos92-9.2-6.noarch.rpm
 
 RUN yum install -y postgresql92 postgresql92-server postgresql92-contrib
 
-RUN service postgresql-9.2 initdb
+RUN sleep 2 && service postgresql-9.2 initdb && sleep 2
 
-RUN sleep 3
-
-RUN service postgresql-9.2 start && netstat -alntp
+RUN service postgresql-9.2 start && netstat -alntp && service postgresql-9.2 stop
 
 # install terasoluna app
-WORKDIR /home/
-
 RUN git clone https://github.com/terasolunaorg/terasoluna-tourreservation.git
 
-# add script in image which starts pgsql and terasoluna app
-#ADD run_tera.sh /home/
-
-#RUN chmod +x /home/run_tera.sh
-
+# create tourreserve database
 RUN > /var/lib/pgsql/9.2/data/pg_hba.conf
 
 RUN echo "local   all             postgres                                trust" >> /var/lib/pgsql/9.2/data/pg_hba.conf
 
-RUN service postgresql-9.2 start && sleep 2 && psql -U postgres --command "ALTER USER postgres with encrypted password 'P0stgres';" && createdb -U postgres tourreserve; service postgresql-9.2 stop
+RUN service postgresql-9.2 start && sleep 2 && psql -U postgres --command "ALTER USER postgres with encrypted password 'P0stgres';" && createdb -U postgres tourreserve && service postgresql-9.2 stop
 
 # edit pgsql conf files
 RUN echo "listen_addresses='*'" >> /var/lib/pgsql/9.2/data/postgresql.conf
